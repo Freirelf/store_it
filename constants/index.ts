@@ -83,6 +83,5 @@ export const sortTypes = [
 
 export const avatarPlaceholderUrl =
   'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg'
-// "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB

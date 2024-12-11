@@ -5,6 +5,8 @@ import { createAdminClient, createSessionClient } from '../appwrite'
 import { appwriteConfig } from '../appwrite/config'
 import { parseStringify } from '../utils'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { avatarPlaceholderUrl } from '@/constants'
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient()
@@ -58,8 +60,7 @@ export const createAccount = async ({
       {
         email,
         fullName,
-        avatar:
-          'https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+        avatar: { avatarPlaceholderUrl },
         accountId,
       },
     )
@@ -107,4 +108,32 @@ export const getCurrentUser = async () => {
   if (user.total <= 0) return null
 
   return parseStringify(user.documents[0])
+}
+
+export const signOutUser = async () => {
+  const { account } = await createSessionClient()
+
+  try {
+    await account.deleteSession('current')
+    ;(await cookies()).delete('appwrite-session')
+  } catch (error) {
+    handleError(error, 'Failed to sign out')
+  } finally {
+    redirect('/sign-in')
+  }
+}
+
+export const signInUser = async ({ email }: { email: string }) => {
+  try {
+    const existingUser = await getUserByEmail(email)
+
+    if (existingUser) {
+      await sendEmailOTP({ email })
+      return parseStringify({ accountId: existingUser.accountId })
+    }
+
+    return parseStringify({ accountId: null, error: 'User not found' })
+  } catch (error) {
+    handleError(error, 'Failed to sign in')
+  }
 }
