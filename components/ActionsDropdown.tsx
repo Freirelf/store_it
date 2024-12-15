@@ -24,10 +24,9 @@ import { Models } from 'node-appwrite'
 import { useState } from 'react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { rename } from 'fs'
 import { renameFile } from '@/lib/actions/file.actions'
 import { usePathname } from 'next/navigation'
-import { set } from 'react-hook-form'
+import { FileDetails } from './ActionsModalContent'
 
 const ActionsDropdown = ({ file }: { file: Models.Document }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -92,6 +91,7 @@ const ActionsDropdown = ({ file }: { file: Models.Document }) => {
               onChange={(e) => setName(e.target.value)}
             />
           )}
+          {value && 'details' && <FileDetails file={file} />}
         </DialogHeader>
         {['rename', 'delete', 'share'].includes(value) && (
           <DialogFooter className="flex flex-col gap- md:flex-row">
