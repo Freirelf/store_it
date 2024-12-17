@@ -43,7 +43,6 @@ const ActionsDropdown = ({ file }: { file: Models.Document }) => {
   const path = usePathname()
 
   const closeAllModals = () => {
-    console.log('Fechando modais')
     setIsModalOpen(false)
     setIsDropdownOpen(false)
     setAction(null)

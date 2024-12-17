@@ -1,12 +1,17 @@
 import Card from '@/components/Card'
 import Sort from '@/components/Sort'
 import { getFiles } from '@/lib/actions/file.actions'
+import { getFileTypesParams } from '@/lib/utils'
 import React from 'react'
 
-const page = async ({ params }: SearchParamProps) => {
+const Page = async ({ params, searchParams }: SearchParamProps) => {
   const type = ((await params)?.type as string) || ''
+  const searchText = ((await searchParams)?.query as string) || ''
+  const sort = ((await searchParams)?.sort as string) || ''
 
-  const files = await getFiles()
+  const types = getFileTypesParams(type) as FileType[]
+
+  const files = await getFiles({ types, searchText, sort })
 
   return (
     <div className="page-container bg-muted">
@@ -42,4 +47,4 @@ const page = async ({ params }: SearchParamProps) => {
   )
 }
 
-export default page
+export default Page
