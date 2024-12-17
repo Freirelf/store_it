@@ -24,7 +24,11 @@ import { Models } from 'node-appwrite'
 import { useState } from 'react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { renameFile, updateFileUsers } from '@/lib/actions/file.actions'
+import {
+  deleteFile,
+  renameFile,
+  updateFileUsers,
+} from '@/lib/actions/file.actions'
 import { usePathname } from 'next/navigation'
 import { FileDetails, ShareInput } from './ActionsModalContent'
 
@@ -67,7 +71,12 @@ const ActionsDropdown = ({ file }: { file: Models.Document }) => {
           emails,
           path,
         }),
-      delete: () => console.log('delete'),
+      delete: () =>
+        deleteFile({
+          fileId: file.$id,
+          bucketFileId: file.bucketFileId,
+          path,
+        }),
     }
 
     success = await actions[action.value as keyof typeof actions]()
@@ -118,6 +127,12 @@ const ActionsDropdown = ({ file }: { file: Models.Document }) => {
             />
           )}
           {value === 'details' && <FileDetails file={file} />}
+          {value === 'delete' && (
+            <p className="delete-confirmation">
+              Você tem certeza que deseja excluir{' '}
+              <span className="delete-file-name">{file.name}</span>?
+            </p>
+          )}
         </DialogHeader>
         {['rename', 'delete', 'share'].includes(value) && (
           <DialogFooter className="flex flex-col gap- md:flex-row">
